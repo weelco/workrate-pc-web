@@ -40,10 +40,16 @@ export async function getEmployees(): Promise<Employee[]> {
 }
 
 export async function getEmployeeLifecycle(employeeId: string): Promise<EmployeeLifecycle | null> {
+  // The demo ID always resolves to the demo fixture, regardless of
+  // whether Supabase is configured. This keeps this function in sync
+  // with getEmployees(), which falls back to demo data whenever the
+  // real `employees` query fails (e.g. before migrations are pushed) —
+  // without this check, a demo ID would leak into a real Supabase query
+  // against a uuid column and error out as "not found".
+  if (employeeId === demoLifecycle.employee.id) return demoLifecycle;
+
   const supabase = createSupabaseServerClient();
-  if (!supabase) {
-    return employeeId === demoLifecycle.employee.id ? demoLifecycle : null;
-  }
+  if (!supabase) return null;
 
   const employees = await getEmployees();
   const employee = employees.find((e) => e.id === employeeId);
