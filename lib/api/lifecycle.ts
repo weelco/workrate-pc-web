@@ -11,10 +11,14 @@ export async function getEmployees(): Promise<Employee[]> {
   const supabase = createSupabaseServerClient();
   if (!supabase) return demoEmployeeList;
 
+  // Note: `manager` and `site.businessUnit` are resolved via PostgREST
+  // embeds over real foreign keys (manager_id -> employees.id,
+  // sites.business_unit_id -> business_units.id) — the schema stores
+  // ids, not denormalized name columns, so this can't be a flat select.
   const { data, error } = await supabase
     .from("employees")
     .select(
-      "id, employee_number, name, role, status, current_phase_key, current_stage_id, started_at, manager_name, sites(id, name, business_unit)"
+      "id, employee_number, name, role, status, current_phase_key, current_stage_id, started_at, manager:employees!manager_id(name), sites(id, name, business_units(name))"
     )
     .order("name");
 
@@ -29,13 +33,13 @@ export async function getEmployees(): Promise<Employee[]> {
     site: {
       id: row.sites?.id ?? "",
       name: row.sites?.name ?? "",
-      businessUnit: row.sites?.business_unit ?? "",
+      businessUnit: row.sites?.business_units?.name ?? "",
     },
     status: row.status,
     currentPhaseKey: row.current_phase_key,
     currentStageId: row.current_stage_id,
     startedAt: row.started_at,
-    manager: row.manager_name,
+    manager: row.manager?.name ?? null,
   }));
 }
 
@@ -55,11 +59,15 @@ export async function getEmployeeLifecycle(employeeId: string): Promise<Employee
   const employee = employees.find((e) => e.id === employeeId);
   if (!employee) return null;
 
+  // lifecycle_stages has no phase_order column of its own (that lives
+  // on the separate lifecycle_phases catalog table) — but phase_key is
+  // a Postgres enum declared as ('onboard','grow','exit'), so ordering
+  // by it directly already sorts in that declared order.
   const { data: stages, error } = await supabase
     .from("lifecycle_stages")
     .select("*")
     .eq("employee_id", employeeId)
-    .order("phase_order", { ascending: true })
+    .order("phase_key", { ascending: true })
     .order("stage_order", { ascending: true });
 
   if (error || !stages) return null;
