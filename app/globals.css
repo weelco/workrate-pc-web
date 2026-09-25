@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Color values below are generated from the Workrate Design System
+ * artifact's tokens.json (hex -> HSL). If that artifact's tokens change,
+ * regenerate these rather than hand-editing hex-derived numbers.
+ * https://claude.ai/artifact/3nFZ8Kjw7szKhrA3AwZUvd
+ */
+@layer base {
+  :root {
+    --navy: 221 88% 13%;
+    --brand: 217 91% 60%;
+    --brand-hover: 221 83% 53%;
+    --surface-page: 210 40% 98%;
+    --surface-card: 0 0% 100%;
+    --surface-sunken: 210 40% 96%;
+    --border: 214 32% 91%;
+    --ink: 222 47% 11%;
+    --ink-muted: 215 16% 47%;
+    --success: 142 76% 36%;
+    --success-surface: 141 84% 93%;
+    --warning: 32 95% 44%;
+    --warning-surface: 48 96% 89%;
+    --danger: 347 77% 50%;
+    --danger-surface: 356 100% 95%;
+    --info: 262 83% 58%;
+    --info-surface: 251 91% 95%;
+    --neutral-phase: 215 16% 47%;
+    --calendar-work: 214 95% 93%;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --space-2: 8px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+  }
+
+  .dark {
+    --navy: 219 79% 19%;
+    --brand: 213 94% 68%;
+    --brand-hover: 212 96% 78%;
+    --surface-page: 222 47% 11%;
+    --surface-card: 217 33% 17%;
+    --surface-sunken: 221 39% 11%;
+    --border: 215 25% 27%;
+    --ink: 210 40% 96%;
+    --ink-muted: 215 20% 65%;
+    --success: 142 69% 58%;
+    --success-surface: 144 61% 20%;
+    --warning: 43 96% 56%;
+    --warning-surface: 22 78% 26%;
+    --danger: 351 95% 71%;
+    --danger-surface: 342 75% 30%;
+    --info: 255 92% 76%;
+    --info-surface: 264 67% 35%;
+    --neutral-phase: 215 19% 35%;
+    --calendar-work: 214 52% 25%;
+  }
+
+  body {
+    @apply bg-surface-page text-ink;
+  }
+}
