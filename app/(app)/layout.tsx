@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { Users2, CalendarClock, Boxes, FileSignature } from "lucide-react";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 
 // Shared shell for every authenticated screen: sidebar nav + top bar.
 // Layout mirrors the Workrate Employee Lifecycle screenshot; modules
 // out of v1 scope (ESS, Asset Management, Contract Management) are
 // shown but disabled, so the nav doesn't need reshaping when they land.
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createSupabaseServerClient();
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
+
   return (
     <div className="flex min-h-screen">
       <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-surface-card">
@@ -33,7 +38,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border bg-surface-card px-6">
           <span className="text-sm text-ink-muted">Workrate &gt; Employee Lifecycle</span>
-          <span className="text-xs text-ink-muted">Phase 1 preview — demo data</span>
+          {!supabase ? (
+            <span className="text-xs text-ink-muted">Phase 1 preview — demo data</span>
+          ) : user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-ink-muted">{user.email}</span>
+              <SignOutButton />
+            </div>
+          ) : (
+            <Link href="/login" className="text-xs font-medium text-brand">
+              Sign in
+            </Link>
+          )}
         </header>
         <main className="flex-1 bg-surface-page p-6">{children}</main>
       </div>

@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 import { getEmployeeLifecycle } from "@/lib/api/lifecycle";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { demoLifecycle } from "@/lib/data/demo";
+import { SignInPrompt } from "@/components/auth/sign-in-prompt";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +10,16 @@ import { PhaseTimeline } from "@/components/lifecycle/phase-timeline";
 import { PhaseProgress } from "@/components/lifecycle/phase-progress";
 
 export default async function EmployeeLifecyclePage({ params }: { params: { id: string } }) {
+  // Same auth gate as the employees list, except the demo record stays
+  // reachable unauthenticated (it never touches Supabase either way).
+  const supabase = createSupabaseServerClient();
+  if (supabase && params.id !== demoLifecycle.employee.id) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return <SignInPrompt />;
+  }
+
   const lifecycle = await getEmployeeLifecycle(params.id);
   if (!lifecycle) notFound();
 

@@ -48,4 +48,6 @@ These need your own logins, so they're not something that can be automated from 
 
 ## What's deliberately not here yet
 
-Per the roadmap doc's confirmed scope: no Attract/recruitment, no Scheduling, Asset Management, Contract Management, or Payroll modules — those are separate modules on Workrate's own roadmap. Auth (Supabase Auth today, dual Entra ID + SAML in-house IDP in Phase 2) isn't wired up yet — every page currently reads without a logged-in user, which is fine for this prototype stage but not for anything with real employee data in it.
+Per the roadmap doc's confirmed scope: no Attract/recruitment, no Scheduling, Asset Management, Contract Management, or Payroll modules — those are separate modules on Workrate's own roadmap.
+
+Entra ID SSO is wired up via Supabase Auth's Azure (OIDC) provider (`app/login`, `app/auth/callback`, `middleware.ts`) — sign in with a Workrate Microsoft account and RLS opens up your own record (matched by email against `employees.work_email`) plus everyone's, if your email is in the `admin_users` table. The in-house SAML IDP for security-cleared employees (Phase 2, per the roadmap doc) still isn't built.

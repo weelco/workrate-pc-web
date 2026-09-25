@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getEmployees } from "@/lib/api/lifecycle";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { SignInPrompt } from "@/components/auth/sign-in-prompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -12,6 +14,18 @@ const STATUS_VARIANT = {
 } as const;
 
 export default async function EmployeesPage() {
+  // Once Supabase is configured, RLS hides every real row from an
+  // anonymous request — show a sign-in prompt instead of a
+  // confusing empty list. Demo mode (no Supabase configured) needs
+  // no auth at all.
+  const supabase = createSupabaseServerClient();
+  if (supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return <SignInPrompt />;
+  }
+
   const employees = await getEmployees();
 
   return (
