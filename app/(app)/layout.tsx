@@ -1,7 +1,8 @@
-import Link from "next/link";
-import { Users2, CalendarClock, Boxes, FileSignature } from "lucide-react";
+import { Users2, CalendarClock, Boxes, FileSignature, ShieldCheck } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { NavLink } from "@/components/layout/nav-link";
+import Link from "next/link";
 
 // Shared shell for every authenticated screen: sidebar nav + top bar.
 // Layout mirrors the Workrate Employee Lifecycle screenshot; modules
@@ -11,6 +12,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const supabase = createSupabaseServerClient();
   const user = supabase ? (await supabase.auth.getUser()).data.user : null;
 
+  // System Check surfaces schema/RLS internals, so it's only linked
+  // from the nav for HR admins — am_i_admin() is safe to call even
+  // before migration 0011 lands (falls back to "not admin" on error).
+  let isAdmin = false;
+  if (supabase && user) {
+    const { data, error } = await supabase.rpc("am_i_admin");
+    isAdmin = !error && data === true;
+  }
+
   return (
     <div className="flex min-h-screen">
       <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-surface-card">
@@ -18,13 +28,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <span className="text-sm font-bold tracking-widest text-navy">WORKRATE</span>
         </div>
         <nav className="flex-1 space-y-1 px-2">
-          <Link
-            href="/employees"
-            className="flex items-center gap-2 rounded-md bg-info-surface px-3 py-2 text-sm font-medium text-brand"
-          >
-            <Users2 className="h-4 w-4" />
+          <NavLink href="/employees" icon={<Users2 className="h-4 w-4" />}>
             Employee Lifecycle
-          </Link>
+          </NavLink>
+          {isAdmin && (
+            <NavLink href="/system-check" icon={<ShieldCheck className="h-4 w-4" />}>
+              System Check
+            </NavLink>
+          )}
 
           <div className="pt-4 text-[11px] font-semibold uppercase tracking-wide text-ink-muted px-3">
             Coming later
