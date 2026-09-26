@@ -33,6 +33,10 @@ export interface Site {
   businessUnit: string;
 }
 
+export type Gender = "female" | "male" | "non_binary" | "prefer_not_to_say";
+
+export type EmploymentType = "full_time" | "part_time" | "contractor" | "temporary";
+
 export interface Employee {
   id: string;
   employeeNumber: string;
@@ -45,6 +49,57 @@ export interface Employee {
   currentStageId: string | null;
   startedAt: string;
   manager: string | null;
+  gender: Gender | null;
+  phone: string | null;
+  department: string | null;
+  employmentType: EmploymentType;
+  workEmail: string | null;
+
+  // Name detail (Dutch naming convention splits these out; `name` above
+  // stays the single display string used everywhere else in the app —
+  // list rows, the record header, avatar initials).
+  preferredName: string | null;
+  firstNames: string | null;
+  lastName: string | null;
+  namePrefix: string | null;
+  legalInitials: string | null;
+
+  // Address
+  street: string | null;
+  houseNumber: string | null;
+  houseNumberAddition: string | null;
+  postalCode: string | null;
+  city: string | null;
+
+  // Personal
+  dateOfBirth: string | null;
+  placeOfBirth: string | null;
+  maritalStatus: string | null;
+  landlinePhone: string | null;
+
+  // Education / mobility
+  inEducation: boolean;
+  educationCompleted: boolean;
+  hasDriversLicense: boolean;
+  hasCar: boolean;
+
+  // Work preference & studies
+  workPreference: string | null;
+  studies: string | null;
+
+  // Medical — special-category GDPR data. Only ever rendered on this
+  // one record's Overview tab, gated by the same RLS as the rest of
+  // `employees` (self or HR admin); never included in a list, export,
+  // or report.
+  gpName: string | null;
+  gpPhone: string | null;
+  allergy: string | null;
+  illness: string | null;
+  medication: string | null;
+
+  // Operational note: sites/clients this person should not be assigned
+  // to. Not a criminal-record field.
+  warningAddresses: string | null;
 }
 
 export interface EmployeeLifecycle {

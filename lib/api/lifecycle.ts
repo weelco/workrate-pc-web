@@ -18,7 +18,7 @@ export async function getEmployees(): Promise<Employee[]> {
   const { data, error } = await supabase
     .from("employees")
     .select(
-      "id, employee_number, name, role, status, current_phase_key, current_stage_id, started_at, manager:employees!manager_id(name), sites(id, name, business_units(name))"
+      "id, employee_number, name, role, status, current_phase_key, current_stage_id, started_at, gender, phone, department, employment_type, work_email, preferred_name, first_names, last_name, name_prefix, legal_initials, street, house_number, house_number_addition, postal_code, city, date_of_birth, place_of_birth, marital_status, landline_phone, in_education, education_completed, has_drivers_license, has_car, work_preference, studies, gp_name, gp_phone, allergy, illness, medication, warning_addresses, manager:employees!manager_id(name), sites(id, name, business_units(name))"
     )
     .order("name");
 
@@ -40,6 +40,44 @@ export async function getEmployees(): Promise<Employee[]> {
     currentStageId: row.current_stage_id,
     startedAt: row.started_at,
     manager: row.manager?.name ?? null,
+    gender: row.gender,
+    phone: row.phone,
+    department: row.department,
+    employmentType: row.employment_type,
+    workEmail: row.work_email,
+
+    preferredName: row.preferred_name,
+    firstNames: row.first_names,
+    lastName: row.last_name,
+    namePrefix: row.name_prefix,
+    legalInitials: row.legal_initials,
+
+    street: row.street,
+    houseNumber: row.house_number,
+    houseNumberAddition: row.house_number_addition,
+    postalCode: row.postal_code,
+    city: row.city,
+
+    dateOfBirth: row.date_of_birth,
+    placeOfBirth: row.place_of_birth,
+    maritalStatus: row.marital_status,
+    landlinePhone: row.landline_phone,
+
+    inEducation: row.in_education,
+    educationCompleted: row.education_completed,
+    hasDriversLicense: row.has_drivers_license,
+    hasCar: row.has_car,
+
+    workPreference: row.work_preference,
+    studies: row.studies,
+
+    gpName: row.gp_name,
+    gpPhone: row.gp_phone,
+    allergy: row.allergy,
+    illness: row.illness,
+    medication: row.medication,
+
+    warningAddresses: row.warning_addresses,
   }));
 }
 

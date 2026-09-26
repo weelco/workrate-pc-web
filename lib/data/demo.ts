@@ -18,6 +18,44 @@ export const demoLifecycle: EmployeeLifecycle = {
     currentStageId: "onboard-3",
     startedAt: "2026-02-10",
     manager: "Mark de Groot",
+    gender: "male",
+    phone: "+31 6 1234 5678",
+    department: "Security Operations",
+    employmentType: "full_time",
+    workEmail: "marcus.reyes@workrate.eu",
+
+    preferredName: "Marcus",
+    firstNames: "Marcus Johan",
+    lastName: "Reyes",
+    namePrefix: null,
+    legalInitials: "M.J.",
+
+    street: "Prins Hendrikkade",
+    houseNumber: "108",
+    houseNumberAddition: null,
+    postalCode: "1011 AJ",
+    city: "Amsterdam",
+
+    dateOfBirth: "1994-06-12",
+    placeOfBirth: "Rotterdam",
+    maritalStatus: "Married",
+    landlinePhone: null,
+
+    inEducation: false,
+    educationCompleted: true,
+    hasDriversLicense: true,
+    hasCar: true,
+
+    workPreference: "Security Officer",
+    studies: null,
+
+    gpName: null,
+    gpPhone: null,
+    allergy: null,
+    illness: null,
+    medication: null,
+
+    warningAddresses: null,
   },
   phases: [
     {

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { PhaseTimeline } from "@/components/lifecycle/phase-timeline";
 import { PhaseProgress } from "@/components/lifecycle/phase-progress";
+import { EmployeeOverview } from "@/components/lifecycle/employee-overview";
 
 export default async function EmployeeLifecyclePage({ params }: { params: { id: string } }) {
   // Same auth gate as the employees list, except the demo record stays
@@ -111,7 +112,7 @@ export default async function EmployeeLifecyclePage({ params }: { params: { id: 
         </TabsContent>
 
         <TabsContent value="overview">
-          <p className="text-sm text-ink-muted">Overview tab — not built yet.</p>
+          <EmployeeOverview employee={employee} />
         </TabsContent>
         <TabsContent value="documents">
           <p className="text-sm text-ink-muted">Documents tab — not built yet.</p>
